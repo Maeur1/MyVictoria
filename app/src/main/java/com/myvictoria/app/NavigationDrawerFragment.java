@@ -110,6 +110,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section6),
                         getString(R.string.title_section7),
                         getString(R.string.title_section8),
+                        getString(R.string.title_section9),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -249,11 +250,6 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
         }
 

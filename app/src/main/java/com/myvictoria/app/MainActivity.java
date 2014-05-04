@@ -64,15 +64,42 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         switch(position){
             case 0:
+                Bundle args = new Bundle();
+                args.putString("user", name);
+                args.putString("pass", pass);
                 mTitle = getString(R.string.title_section1);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, new InternetFragment())
+                        .replace(R.id.container, InternetFragment.newInstance("https://my.vuw.ac.nz/cp/home/displaylogin"))
                         .commit();
                 break;
             case 1:
                 mTitle = getString(R.string.title_section2);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, new CalendarFragment())
+                        .replace(R.id.container, InternetFragment.newInstance("https://csa-public.vuw.ac.nz/pls/webprod/bwskfshd.P_CrseSchd"))
+                        .commit();
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section5);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new MapFragment())
+                        .commit();
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section6);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, InternetFragment.newInstance("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp"))
+                        .commit();
+                break;
+            case 7:
+                mTitle = getString(R.string.title_section8);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, InternetFragment.newInstance("https://www.facebook.com/groups/overheardvic/"))
+                        .commit();
+                break;
+            case 8:
+                mTitle = getString(R.string.title_section9);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, InternetFragment.newInstance("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx"))
                         .commit();
                 break;
             default:
@@ -81,11 +108,6 @@ public class MainActivity extends Activity
                         .commit();
                 break;
         }
-        /*if(position > 1) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
-        }*/
     }
 
     public void onSectionAttached(int number) {
@@ -113,6 +135,9 @@ public class MainActivity extends Activity
                 break;
             case 8:
                 mTitle = getString(R.string.title_section8);
+                break;
+            case 9:
+                mTitle = getString(R.string.title_section9);
                 break;
             default:
                 mTitle = getString(R.string.title_section1);
