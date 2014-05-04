@@ -62,14 +62,19 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        if(position != 0) {
+        if(position > 1) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                     .commit();
-        } else {
+        } else if (position == 0){
             mTitle = getString(R.string.title_section1);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, new InternetFragment())
+                    .commit();
+        } else if (position == 1){
+            mTitle = getString(R.string.title_section2);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new CalendarFragment())
                     .commit();
         }
     }
