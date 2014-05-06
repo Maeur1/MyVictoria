@@ -1,22 +1,17 @@
 package com.myvictoria.app;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.apache.http.util.EncodingUtils;
 
-import java.io.IOException;
+import android.webkit.CookieManager;
 
 /**
  * Created by Mayur on 4/05/2014.
@@ -31,6 +26,16 @@ public class InternetFragment extends Fragment{
         InternetFragment fragment = new InternetFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static InternetFragment newInstanceLogin(String url, String n, String p) {
+        InternetFragment fragment = new InternetFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_URL, url);
+        args.putString("name", n);
+        args.putString("pass", p);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,16 +57,30 @@ public class InternetFragment extends Fragment{
         internet.getSettings().setJavaScriptEnabled(true);
         internet.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         internet.setWebViewClient(new MyBrowser());
-        /*Document doc = null;
-        try {
-            doc = Jsoup.connect(ARG_URL).get();
-            Element user = doc.select("input").first();
-            user.text("name");
-            Element pass = doc.select("input").last();
-            pass.text("pass");
-        } catch (IOException e) {  }*/
-        internet.loadUrl(ARG_URL);
+        if(ARG_URL.contains("https://my.vuw.ac.nz/")) {
+            internet.loadUrl(ARG_URL);
+            String uuid = getCookie(ARG_URL, "JSESSIONID");
+            //Log.d("UUID MESSAGE", uuid);
+            String postData = "pass=" + pass + "&user=" + name + "&uuid" + uuid;
+            internet.postUrl(ARG_URL, postData.getBytes());
+        } else {
+            internet.loadUrl(ARG_URL);
+        }
         return view;
+    }
+
+    public String getCookie(String siteName,String CookieName){
+        String CookieValue = null;
+        CookieManager cookieManager = CookieManager.getInstance();
+        String cookies = cookieManager.getCookie(siteName);
+        String[] temp=cookies.split("[;]");
+        for (String ar1 : temp ){
+            if(ar1.contains(CookieName)){
+                String[] temp1=ar1.split("[=]");
+                CookieValue = temp1[1];
+            }
+        }
+        return CookieValue;
     }
 
     private class MyBrowser extends WebViewClient {

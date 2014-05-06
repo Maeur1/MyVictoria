@@ -64,12 +64,9 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         switch(position){
             case 0:
-                Bundle args = new Bundle();
-                args.putString("user", name);
-                args.putString("pass", pass);
                 mTitle = getString(R.string.title_section1);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://my.vuw.ac.nz/cp/home/displaylogin"))
+                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/login", name, pass))
                         .commit();
                 break;
             case 1:
@@ -213,8 +210,8 @@ public class MainActivity extends Activity
             TextView username = (TextView) rootView.findViewById(R.id.username);
             TextView password = (TextView) rootView.findViewById(R.id.password);
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            username.setText(name);
-            password.setText(pass);
+            username.setText("This would be your Username");
+            password.setText("This would be your Password");
             return rootView;
         }
 
@@ -225,5 +222,4 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
