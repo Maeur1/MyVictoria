@@ -64,12 +64,12 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         switch(position){
             case 0:
-                Bundle args = new Bundle();
-                args.putString("user", name);
-                args.putString("pass", pass);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                name = prefs.getString("username", "Username here");
+                pass = prefs.getString("password", "Password here");
                 mTitle = getString(R.string.title_section1);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://my.vuw.ac.nz/cp/home/displaylogin"))
+                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/displaylogin", name, pass))
                         .commit();
                 break;
             case 1:

@@ -15,6 +15,7 @@
             android:title="Password"
             android:summary="for the University Website"
             android:key="password"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            android:password="true"/>
     </PreferenceCategory>
 </PreferenceScreen>
