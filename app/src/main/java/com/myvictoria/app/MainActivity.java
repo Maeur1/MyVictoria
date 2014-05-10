@@ -73,33 +73,33 @@ public class MainActivity extends Activity
                         .commit();
                 break;
             case 1:
-                mTitle = getString(R.string.title_section2);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://csa-public.vuw.ac.nz/pls/webprod/bwskfshd.P_CrseSchd"))
-                        .commit();
-                break;
-            case 4:
                 mTitle = getString(R.string.title_section5);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new MapFragment())
                         .commit();
                 break;
-            case 5:
+            case 2:
                 mTitle = getString(R.string.title_section6);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp", name, pass))
                         .commit();
                 break;
-            case 7:
+            case 3:
                 mTitle = getString(R.string.title_section8);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, InternetFragment.newInstance("https://www.facebook.com/groups/overheardvic/"))
                         .commit();
                 break;
-            case 8:
+            case 4:
                 mTitle = getString(R.string.title_section9);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, InternetFragment.newInstanceLogin("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx", name, pass))
+                        .commit();
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section7);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new LectureFragment())
                         .commit();
                 break;
             default:
@@ -213,8 +213,8 @@ public class MainActivity extends Activity
             TextView username = (TextView) rootView.findViewById(R.id.username);
             TextView password = (TextView) rootView.findViewById(R.id.password);
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            username.setText(name);
-            password.setText(pass);
+            //username.setText(name);
+            //password.setText(pass);
             return rootView;
         }
 

@@ -73,17 +73,27 @@ public class InternetFragment extends Fragment{
         internet.getSettings().setJavaScriptEnabled(true);
         internet.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         internet.setWebViewClient(new MyBrowser());
-        internet.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
-                prog.setVisibility(View.VISIBLE);
-                prog.setProgress(progress);
-                if (progress == 100) {
-                    prog.setProgress(0); // Make the bar disappear after URL is loaded
-                }
-            }
-        });
+        internet.setWebChromeClient(new MyChrome());
         internet.loadUrl(ARG_URL);
         return view;
+    }
+
+    private class MyChrome extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+            prog.setVisibility(View.VISIBLE);
+            prog.setProgress(newProgress);
+            if (newProgress == 100) {
+                prog.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            Log.d("Java Alert", message);
+            return super.onJsAlert(view, url, message, result);
+        }
     }
 
     private class MyBrowser extends WebViewClient {
@@ -103,11 +113,23 @@ public class InternetFragment extends Fragment{
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
-                view.loadUrl("javascript:document.getElementById('pass').value = '" + pass + "';document.getElementById('user').value='" + name + "';login(); return false;");
+                view.loadUrl("javascript:document.getElementById('pass').value = '"
+                        + pass
+                        + "';document.getElementById('user').value= '"
+                        + name
+                        + "';login(); return false;");
             } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp")){
-                view.loadUrl("javascript:document.getElementById('password').value = '" + pass + "';document.getElementById('user_id').value='" + name + "';document.getElementByName('login').click(); return false;");
-            } else if(url.equals("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx")){
-                view.loadUrl("javascript:document.getElementByName('ctl00$mainContent$simLogin$Password').value = '" + pass + "';document.getElementByName('ctl00$mainContent$simLogin$UserName').value='" + name + "'document.getElementByName('ctl00$mainContent$simLogin$LoginImageButton').click(); return false;");
+                view.loadUrl("javascript:document.getElementById('password').value = '"
+                        + pass
+                        + "';document.getElementById('user_id').value='"
+                        + name
+                        + "';document.getElementByName('login').click();");
+            } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
+                view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
+                        + pass
+                        + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
+                        + name
+                        + "';document.getElementById('ctl00_mainContent_simLogin_LoginImageButton').click();");
             }
         }
     }
