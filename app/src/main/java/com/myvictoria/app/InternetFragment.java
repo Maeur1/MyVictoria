@@ -117,13 +117,13 @@ public class InternetFragment extends Fragment{
                         + pass
                         + "';document.getElementById('user').value= '"
                         + name
-                        + "';login(); return false;");
+                        + "';login();");
             } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp")){
-                view.loadUrl("javascript:document.getElementById('password').value = '"
+                view.loadUrl("javascript:document.getElementById('contentFrame').contentDocument.getElementById('password').value = '"
                         + pass
-                        + "';document.getElementById('user_id').value='"
+                        + "';document.getElementById('contentFrame').contentDocument.getElementById('user_id').value = '"
                         + name
-                        + "';document.getElementByName('login').click();");
+                        + "';document.getElementById('contentFrame').contentDocument.getElementsByClassName('submit button-1')[0].click();");
             } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
                 view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
                         + pass
