@@ -16,6 +16,7 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.http.util.EncodingUtils;
@@ -33,6 +34,7 @@ public class InternetFragment extends Fragment{
 
     private static String ARG_URL = "https://my.vuw.ac.nz/cp/home/displaylogin";
     public WebView internet;
+    private ProgressBar prog;
     public String name, pass;
 
     public static InternetFragment newInstance(String url) {
@@ -66,10 +68,20 @@ public class InternetFragment extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_internet, container, false);
         internet = (WebView) view.findViewById(R.id.webview);
+        prog = (ProgressBar) view.findViewById(R.id.progressBar);
         internet.getSettings().setLoadsImagesAutomatically(true);
         internet.getSettings().setJavaScriptEnabled(true);
         internet.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         internet.setWebViewClient(new MyBrowser());
+        internet.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                prog.setVisibility(View.VISIBLE);
+                prog.setProgress(progress);
+                if (progress == 100) {
+                    prog.setProgress(0); // Make the bar disappear after URL is loaded
+                }
+            }
+        });
         internet.loadUrl(ARG_URL);
         return view;
     }
@@ -92,11 +104,11 @@ public class InternetFragment extends Fragment{
             super.onPageFinished(view, url);
             if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
                 view.loadUrl("javascript:document.getElementById('pass').value = '" + pass + "';document.getElementById('user').value='" + name + "';login(); return false;");
-            }/* else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp")){
+            } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp")){
                 view.loadUrl("javascript:document.getElementById('password').value = '" + pass + "';document.getElementById('user_id').value='" + name + "';document.getElementByName('login').click(); return false;");
             } else if(url.equals("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx")){
                 view.loadUrl("javascript:document.getElementByName('ctl00$mainContent$simLogin$Password').value = '" + pass + "';document.getElementByName('ctl00$mainContent$simLogin$UserName').value='" + name + "'document.getElementByName('ctl00$mainContent$simLogin$LoginImageButton').click(); return false;");
-            }*/
+            }
         }
     }
 

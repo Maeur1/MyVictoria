@@ -62,11 +62,11 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        name = prefs.getString("username", "Username here");
+        pass = prefs.getString("password", "Password here");
         switch(position){
             case 0:
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                name = prefs.getString("username", "Username here");
-                pass = prefs.getString("password", "Password here");
                 mTitle = getString(R.string.title_section1);
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/displaylogin", name, pass))
@@ -87,7 +87,7 @@ public class MainActivity extends Activity
             case 5:
                 mTitle = getString(R.string.title_section6);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp"))
+                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp", name, pass))
                         .commit();
                 break;
             case 7:
@@ -99,7 +99,7 @@ public class MainActivity extends Activity
             case 8:
                 mTitle = getString(R.string.title_section9);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx"))
+                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx", name, pass))
                         .commit();
                 break;
             default:
