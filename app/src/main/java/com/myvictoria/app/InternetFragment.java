@@ -1,29 +1,17 @@
 package com.myvictoria.app;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import org.apache.http.util.EncodingUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -73,6 +61,10 @@ public class InternetFragment extends Fragment{
         internet.getSettings().setJavaScriptEnabled(true);
         internet.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         internet.setWebViewClient(new MyBrowser());
+        internet.getSettings().setUseWideViewPort(true);
+        internet.getSettings().setLoadWithOverviewMode(true);
+        internet.getSettings().setBuiltInZoomControls(true);
+        internet.setInitialScale(100);
         internet.setWebChromeClient(new MyChrome());
         internet.loadUrl(ARG_URL);
         return view;

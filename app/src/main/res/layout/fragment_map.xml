@@ -11,7 +11,7 @@
         android:id="@+id/map"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="matrix"/>
+        android:scaleType="matrix"></com.myvictoria.app.TouchImageView>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Kelburn"
         android:id="@+id/bKelburn"
-        android:layout_below="@+id/progressBar"
+        android:layout_below="@+id/pbImage"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -42,13 +42,9 @@
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/pbImage"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/map" />
+        android:id="@+id/pbImage" />
 
 
 </RelativeLayout>

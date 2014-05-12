@@ -3,6 +3,7 @@ package com.myvictoria.app;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -33,8 +34,6 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         im.setImageResource(R.drawable.kelburn_map);
         return rootView;
     }
-
-
 
     @Override
     public void onClick(View v) {
