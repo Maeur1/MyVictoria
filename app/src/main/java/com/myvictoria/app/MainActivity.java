@@ -3,6 +3,7 @@ package com.myvictoria.app;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -81,7 +82,7 @@ public class MainActivity extends Activity
             case 2:
                 mTitle = getString(R.string.title_section6);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp", name, pass))
+                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1", name, pass))
                         .commit();
                 break;
             case 3:

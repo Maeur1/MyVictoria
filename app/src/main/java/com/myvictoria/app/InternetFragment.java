@@ -1,29 +1,43 @@
 package com.myvictoria.app;
 
+import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.CookieManager;
 
 /**
  * Created by Mayur on 4/05/2014.
  */
 public class InternetFragment extends Fragment{
 
+    private String cookie;
+
     private static String ARG_URL = "https://my.vuw.ac.nz/cp/home/displaylogin";
     public WebView internet;
     private ProgressBar prog;
     public String name, pass;
+    private DownloadManager downloads;
+    //final DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+
 
     public static InternetFragment newInstance(String url) {
         InternetFragment fragment = new InternetFragment();
@@ -95,27 +109,41 @@ public class InternetFragment extends Fragment{
             super.onPageStarted(view, url, favicon);
         }
 
+        File destinationDir = new File (Environment.getExternalStorageDirectory().getPath() + "/MyVictoria");
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
+            if(url.endsWith(".pdf")) {
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url.substring(url.lastIndexOf('/')+1, url.length()));
+                DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+                request.addRequestHeader("Cookie", cookie);
+                request.addRequestHeader("User-Agent", view.getSettings().getUserAgentString());
+                manager.enqueue(request);
+            } else {
+                view.loadUrl(url);
+            }
             return true;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            cookie = android.webkit.CookieManager.getInstance().getCookie(url);
             if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
                 view.loadUrl("javascript:document.getElementById('pass').value = '"
                         + pass
                         + "';document.getElementById('user').value= '"
                         + name
                         + "';login();");
-            } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/frameset.jsp")){
-                view.loadUrl("javascript:document.getElementById('contentFrame').contentDocument.getElementById('password').value = '"
+            } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")){
+                view.loadUrl("javascript:document.getElementById('password').value = '"
                         + pass
-                        + "';document.getElementById('contentFrame').contentDocument.getElementById('user_id').value = '"
+                        + "';document.getElementById('user_id').value = '"
                         + name
-                        + "';document.getElementById('contentFrame').contentDocument.getElementsByClassName('submit button-1')[0].click();");
+                        + "';document.getElementsByClassName('submit button-1')[0].click();");
             } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
                 view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
                         + pass
