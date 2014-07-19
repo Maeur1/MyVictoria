@@ -3,26 +3,22 @@ package com.myvictoria.app;
 import android.app.Activity;
 
 import android.app.ActionBar;
-import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 
 public class MainActivity extends Activity
@@ -41,6 +37,7 @@ public class MainActivity extends Activity
     SharedPreferences getData;
     static String name;
     static String pass;
+    ShowcaseView sv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +54,13 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        ActionViewTarget av = new ActionViewTarget(this, ActionViewTarget.Type.TITLE);
+        sv = new ShowcaseView.Builder(this)
+                .setTarget(av)
+                .setContentText("This is the test Text")
+                .setContentTitle("This is a test Title")
+                .hideOnTouchOutside()
+                .build();
     }
 
     @Override
@@ -211,11 +215,7 @@ public class MainActivity extends Activity
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            TextView username = (TextView) rootView.findViewById(R.id.username);
-            TextView password = (TextView) rootView.findViewById(R.id.password);
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            //username.setText(name);
-            //password.setText(pass);
             return rootView;
         }
 
