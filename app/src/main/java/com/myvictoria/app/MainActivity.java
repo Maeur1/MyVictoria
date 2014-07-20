@@ -22,7 +22,7 @@ import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -34,6 +34,7 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
+    FragmentManager fragmentManager;
     SharedPreferences getData;
     static String name;
     static String pass;
@@ -49,24 +50,41 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        ActionViewTarget av = new ActionViewTarget(this, ActionViewTarget.Type.TITLE);
-        sv = new ShowcaseView.Builder(this)
-                .setTarget(av)
-                .setContentText("This is the test Text")
-                .setContentTitle("This is a test Title")
-                .hideOnTouchOutside()
-                .build();
+        boolean isFirstRun = getData.getBoolean("FIRSTRUN", true);
+        if (isFirstRun) {
+            ActionViewTarget av = new ActionViewTarget(this, ActionViewTarget.Type.TITLE);
+            sv = new ShowcaseView.Builder(this)
+                    .setContentText("Tap this to get to the menu of modules")
+                    .setContentTitle("MyVictoria Home")
+                    .hideOnTouchOutside()
+                    .setTarget(av)
+                    .setStyle(R.style.AppTheme)
+                    .build();
+            sv.setButtonText("OK Got it!");
+            getData.edit()
+                    .putBoolean("FIRSTRUN", false)
+                    .apply();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment webview = getFragmentManager().findFragmentById(R.id.container);
+        if(webview instanceof InternetFragment) {
+            if (((InternetFragment)webview).close()) {
+                finish();
+            }
+        }
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager = getFragmentManager();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         name = prefs.getString("username", "Username here");
         pass = prefs.getString("password", "Password here");

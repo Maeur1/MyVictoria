@@ -17,5 +17,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="MyVuw">https://my.vuw.ac.nz/cp/home/displaylogin</string>
+    <string name="Blackboard">https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1</string>
+    <string name="Scubed">https://signups.victoria.ac.nz/login.aspx</string>
 
 </resources>

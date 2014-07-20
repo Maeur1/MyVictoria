@@ -2,9 +2,7 @@ package com.myvictoria.app;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,20 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.CookieManager;
-
-/**
- * Created by Mayur on 4/05/2014.
- */
 public class InternetFragment extends Fragment{
 
     private String cookie;
@@ -35,9 +26,22 @@ public class InternetFragment extends Fragment{
     public WebView internet;
     private ProgressBar prog;
     public String name, pass;
-    private DownloadManager downloads;
-    //final DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 
+    public boolean close(){
+        String currentUrl = internet.getUrl();
+        if(currentUrl.equals("http://my.vuw.ac.nz/render.userLayoutRootNode.uP?uP_root=root") || currentUrl.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1") || currentUrl.equals("https://signups.victoria.ac.nz/index.aspx")){
+            return true;
+        } else {
+            if (internet.getUrl().contains("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root")){
+                internet.loadUrl("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root&uP_sparam=activeTab&activeTab=u11l1s8&uP_tparam=frm&frm=");
+            } else if (internet.getUrl().contains("https://blackboard.vuw.ac.nz/webapps/")) {
+                internet.goBack();
+            } else if (internet.getUrl().contains("https://signups.victoria.ac.nz/")) {
+                internet.goBack();
+            }
+            return false;
+        }
+    }
 
     public static InternetFragment newInstance(String url) {
         InternetFragment fragment = new InternetFragment();
@@ -105,11 +109,14 @@ public class InternetFragment extends Fragment{
     private class MyBrowser extends WebViewClient {
 
         @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
         }
-
-        File destinationDir = new File (Environment.getExternalStorageDirectory().getPath() + "/MyVictoria");
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
