@@ -78,6 +78,8 @@ public class MainActivity extends Activity
             if (((InternetFragment)webview).close()) {
                 finish();
             }
+        } else {
+            super.onBackPressed();
         }
     }
 

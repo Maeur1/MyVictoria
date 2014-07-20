@@ -38,8 +38,8 @@ public class TouchImageView extends ImageView {
     // zoomed below or above the zoom boundaries, before animating back to the
     // min/max zoom boundary.
     //
-    private static final float SUPER_MIN_MULTIPLIER = .25f;
-    private static final float SUPER_MAX_MULTIPLIER = 1.25f;
+    private static final float SUPER_MIN_MULTIPLIER = 1.00f;
+    private static final float SUPER_MAX_MULTIPLIER = 1.00f;
 
     //
     // Scale of image ranges from minScale to maxScale, where minScale == 1
@@ -117,7 +117,7 @@ public class TouchImageView extends ImageView {
             mScaleType = ScaleType.FIT_CENTER;
         }
         minScale = 1;
-        maxScale = 3;
+        maxScale = 6;
         superMinScale = SUPER_MIN_MULTIPLIER * minScale;
         superMaxScale = SUPER_MAX_MULTIPLIER * maxScale;
         setImageMatrix(matrix);
