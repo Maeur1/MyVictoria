@@ -139,19 +139,19 @@ public class InternetFragment extends Fragment{
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             cookie = android.webkit.CookieManager.getInstance().getCookie(url);
-            if(url.equals(getString(R.string.MyVuw))) {
+            if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
                 view.loadUrl("javascript:document.getElementById('pass').value = '"
                         + pass
                         + "';document.getElementById('user').value= '"
                         + name
                         + "';login();");
-            } else if(url.equals(getString(R.string.Blackboard))){
+            } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")){
                 view.loadUrl("javascript:document.getElementById('password').value = '"
                         + pass
                         + "';document.getElementById('user_id').value = '"
                         + name
                         + "';document.getElementsByClassName('submit button-1')[0].click();");
-            } else if(url.contains(getString(R.string.Scubed))){
+            } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
                 view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
                         + pass
                         + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
