@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
@@ -43,6 +45,7 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         getData = PreferenceManager.getDefaultSharedPreferences(this);
         name = getData.getString("username", "No Username Set");
@@ -90,47 +93,42 @@ public class MainActivity extends Activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         name = prefs.getString("username", "Username here");
         pass = prefs.getString("password", "Password here");
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         switch(position){
             case 0:
                 mTitle = getString(R.string.title_section1);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/displaylogin", name, pass))
-                        .commit();
+                        ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/displaylogin", name, pass));
+                        ft.commit();
                 break;
             case 1:
                 mTitle = getString(R.string.title_section5);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new MapFragment())
-                        .commit();
+                        ft.replace(R.id.container, new MapFragment());
+                        ft.commit();
                 break;
             case 2:
                 mTitle = getString(R.string.title_section6);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1", name, pass))
-                        .commit();
+                        ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1", name, pass));
+                        ft.commit();
                 break;
             case 3:
                 mTitle = getString(R.string.title_section8);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstance("https://www.facebook.com/groups/overheardvic/"))
-                        .commit();
+                        ft.replace(R.id.container, InternetFragment.newInstance("https://www.facebook.com/groups/overheardvic/"));
+                        ft.commit();
                 break;
             case 4:
                 mTitle = getString(R.string.title_section9);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, InternetFragment.newInstanceLogin("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx", name, pass))
-                        .commit();
+                        ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx", name, pass));
+                        ft.commit();
                 break;
             case 5:
                 mTitle = getString(R.string.title_section7);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new LectureFragment())
-                        .commit();
+                        ft.replace(R.id.container, new LectureFragment());
+                        ft.commit();
                 break;
             default:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                        .commit();
+                        ft.replace(R.id.container, PlaceholderFragment.newInstance(position + 1));
+                        ft.commit();
                 break;
         }
     }
@@ -198,8 +196,13 @@ public class MainActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent i = new Intent(this, Settings.class);
-            startActivity(i);
+            mTitle = "Settings";
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+            ft.replace(R.id.container, new SettingsFragment());
+            ft.commit();
+            restoreActionBar();
             return true;
         }
         return super.onOptionsItemSelected(item);

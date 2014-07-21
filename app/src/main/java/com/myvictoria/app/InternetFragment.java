@@ -1,5 +1,6 @@
 package com.myvictoria.app;
 
+import android.app.ActionBar;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -74,7 +75,6 @@ public class InternetFragment extends Fragment{
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_internet, container, false);
         internet = (WebView) view.findViewById(R.id.webview);
-        prog = (ProgressBar) view.findViewById(R.id.progressBar);
         internet.getSettings().setLoadsImagesAutomatically(true);
         internet.getSettings().setJavaScriptEnabled(true);
         internet.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -92,10 +92,9 @@ public class InternetFragment extends Fragment{
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
-            prog.setVisibility(View.VISIBLE);
-            prog.setProgress(newProgress);
+            getActivity().setProgressBarIndeterminateVisibility(true);
             if (newProgress == 100) {
-                prog.setVisibility(View.GONE);
+                getActivity().setProgressBarIndeterminateVisibility(false);
             }
         }
 
@@ -107,16 +106,6 @@ public class InternetFragment extends Fragment{
     }
 
     private class MyBrowser extends WebViewClient {
-
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-        }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

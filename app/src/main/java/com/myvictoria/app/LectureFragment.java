@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -26,6 +27,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
     String time, room, course, type, day, start, end;
     Boolean found;
     Calendar c = Calendar.getInstance();
+    ArrayList<String> strings = new ArrayList<String>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
             found = false;
             String check = "";
             Scanner scan = new Scanner(getResources().openRawResource(R.raw.classdata));
+            getActivity().setProgressBarIndeterminateVisibility(true);
             while (scan.hasNext()) {
                 check = scan.next();
                 if (check.contains(input.getText().toString().toUpperCase())) {
@@ -49,16 +52,19 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                     start = scan.next();
                     end = scan.next();
                     room = scan.next();
-                    response.append(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
+                    strings.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
                     response.setVisibility(View.VISIBLE);
                     found = true;
                 }
             }
+            for(int i = 0; i<strings.size(); i++)
+                response.append(strings.get(i).toString());
+
             if(!found){
                 response.setText("There were no matches found.");
                 response.setVisibility(View.VISIBLE);
-
             }
+            getActivity().setProgressBarIndeterminateVisibility(false);
         }
     }
 

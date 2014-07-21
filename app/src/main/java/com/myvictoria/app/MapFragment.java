@@ -31,7 +31,6 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         initialise(rootView);
         pb.setVisibility(View.GONE);
-        im.setImageResource(R.drawable.kelburn_map);
         return rootView;
     }
 
