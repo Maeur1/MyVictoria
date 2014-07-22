@@ -2,6 +2,7 @@ package com.myvictoria.app;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,26 +54,24 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                         end = scan.next();
                         room = scan.next();
                         strings.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
-                        response.setVisibility(View.VISIBLE);
                         found = true;
                     }
                 }
                 for (int i = 0; i < strings.size(); i++)
                     response.append(strings.get(i).toString());
-
+                response.setVisibility(View.VISIBLE);
                 if (!found) {
                     response.setText("There were no matches found.");
-                    response.setVisibility(View.VISIBLE);
                 }
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
-                getActivity().setProgressBarIndeterminateVisibility(false);
             }
         } else {
             response.setText("Please enter a class.");
             response.setVisibility(View.VISIBLE);
         }
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+        getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     private void initialise(View view){
@@ -82,6 +81,14 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
         response = (TextView) view.findViewById(R.id.tvResponse);
         response.setVisibility(View.GONE);
         submit.setOnClickListener(this);
+    }
 
+    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            return null;
+        }
     }
 }
