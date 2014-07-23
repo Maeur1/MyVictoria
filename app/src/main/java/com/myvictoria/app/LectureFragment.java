@@ -38,7 +38,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (input.getText() != null) {
+        if (!input.getText().toString().matches("")) {
             if (v.getId() == R.id.bSubmit) {
                 response.setText("");
                 found = false;
