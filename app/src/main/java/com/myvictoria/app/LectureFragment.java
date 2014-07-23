@@ -1,17 +1,16 @@
 package com.myvictoria.app;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -65,6 +64,9 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                     response.setText("There were no matches found.");
                     response.setVisibility(View.VISIBLE);
                 }
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
                 getActivity().setProgressBarIndeterminateVisibility(false);
             }
         } else {
@@ -80,5 +82,6 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
         response = (TextView) view.findViewById(R.id.tvResponse);
         response.setVisibility(View.GONE);
         submit.setOnClickListener(this);
+
     }
 }
