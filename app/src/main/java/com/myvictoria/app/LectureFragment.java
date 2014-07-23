@@ -24,7 +24,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
     Button submit;
     EditText input;
     TextView info, response;
-    String time, room, course, type, day, start, end;
+    String room, type, day, start, end;
     Boolean found;
     Calendar c = Calendar.getInstance();
     ArrayList<String> strings = new ArrayList<String>();
@@ -38,33 +38,38 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.bSubmit) {
-            response.setText("");
-            found = false;
-            String check = "";
-            Scanner scan = new Scanner(getResources().openRawResource(R.raw.classdata));
-            getActivity().setProgressBarIndeterminateVisibility(true);
-            while (scan.hasNext()) {
-                check = scan.next();
-                if (check.contains(input.getText().toString().toUpperCase())) {
-                    type = scan.next();
-                    day = scan.next();
-                    start = scan.next();
-                    end = scan.next();
-                    room = scan.next();
-                    strings.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
-                    response.setVisibility(View.VISIBLE);
-                    found = true;
+        if (input.getText() != null) {
+            if (v.getId() == R.id.bSubmit) {
+                response.setText("");
+                found = false;
+                String check = "";
+                Scanner scan = new Scanner(getResources().openRawResource(R.raw.classdata));
+                getActivity().setProgressBarIndeterminateVisibility(true);
+                while (scan.hasNext()) {
+                    check = scan.next();
+                    if (check.contains(input.getText().toString().toUpperCase())) {
+                        type = scan.next();
+                        day = scan.next();
+                        start = scan.next();
+                        end = scan.next();
+                        room = scan.next();
+                        strings.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
+                        response.setVisibility(View.VISIBLE);
+                        found = true;
+                    }
                 }
-            }
-            for(int i = 0; i<strings.size(); i++)
-                response.append(strings.get(i).toString());
+                for (int i = 0; i < strings.size(); i++)
+                    response.append(strings.get(i).toString());
 
-            if(!found){
-                response.setText("There were no matches found.");
-                response.setVisibility(View.VISIBLE);
+                if (!found) {
+                    response.setText("There were no matches found.");
+                    response.setVisibility(View.VISIBLE);
+                }
+                getActivity().setProgressBarIndeterminateVisibility(false);
             }
-            getActivity().setProgressBarIndeterminateVisibility(false);
+        } else {
+            response.setText("Please enter a class.");
+            response.setVisibility(View.VISIBLE);
         }
     }
 

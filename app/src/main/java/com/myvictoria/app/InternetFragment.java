@@ -74,6 +74,7 @@ public class InternetFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_internet, container, false);
+        prog = (ProgressBar) view.findViewById(R.id.progressBar);
         internet = (WebView) view.findViewById(R.id.webview);
         internet.getSettings().setLoadsImagesAutomatically(true);
         internet.getSettings().setJavaScriptEnabled(true);
@@ -91,11 +92,12 @@ public class InternetFragment extends Fragment{
     private class MyChrome extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-            getActivity().setProgressBarIndeterminateVisibility(true);
+            prog.setVisibility(View.VISIBLE);
+            prog.setProgress(newProgress);
             if (newProgress == 100) {
-                getActivity().setProgressBarIndeterminateVisibility(false);
+                prog.setProgress(0);
             }
+            super.onProgressChanged(view, newProgress);
         }
 
         @Override
