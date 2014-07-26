@@ -43,6 +43,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                 response.setText("");
                 found = false;
                 String check = "";
+                strings.clear();
                 Scanner scan = new Scanner(getResources().openRawResource(R.raw.classdata));
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 while (scan.hasNext()) {
@@ -55,6 +56,8 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                         room = scan.next();
                         strings.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
                         found = true;
+                    } else {
+                        scan.nextLine();
                     }
                 }
                 for (int i = 0; i < strings.size(); i++)
@@ -83,12 +86,4 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
         submit.setOnClickListener(this);
     }
 
-    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            return null;
-        }
-    }
 }
