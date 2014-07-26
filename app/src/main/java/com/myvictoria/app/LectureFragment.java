@@ -2,7 +2,6 @@ package com.myvictoria.app;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
 
-/**
- * Created by Mayur on 11/05/2014.
- */
 public class LectureFragment extends Fragment implements View.OnClickListener{
 
     Button submit;
@@ -26,7 +21,6 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
     TextView info, response;
     String room, type, day, start, end;
     Boolean found;
-    Calendar c = Calendar.getInstance();
     ArrayList<String> strings = new ArrayList<String>();
 
     @Override
@@ -42,12 +36,11 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
             if (v.getId() == R.id.bSubmit) {
                 response.setText("");
                 found = false;
-                String check = "";
                 strings.clear();
                 Scanner scan = new Scanner(getResources().openRawResource(R.raw.classdata));
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 while (scan.hasNext()) {
-                    check = scan.next();
+                    String check = scan.next();
                     if (check.contains(input.getText().toString().toUpperCase())) {
                         type = scan.next();
                         day = scan.next();
@@ -60,8 +53,8 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                         scan.nextLine();
                     }
                 }
-                for (int i = 0; i < strings.size(); i++)
-                    response.append(strings.get(i).toString());
+                for (String s:strings)
+                    response.append(s);
                 response.setVisibility(View.VISIBLE);
                 if (!found) {
                     response.setText("There were no matches found.");
