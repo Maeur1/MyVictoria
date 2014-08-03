@@ -1,10 +1,8 @@
 package com.myvictoria.app;
 
-import android.app.ActionBar;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +15,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class InternetFragment extends Fragment{
 
@@ -35,9 +32,7 @@ public class InternetFragment extends Fragment{
         } else {
             if (internet.getUrl().contains("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root")){
                 internet.loadUrl("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root&uP_sparam=activeTab&activeTab=u11l1s8&uP_tparam=frm&frm=");
-            } else if (internet.getUrl().contains("https://blackboard.vuw.ac.nz/webapps/")) {
-                internet.goBack();
-            } else if (internet.getUrl().contains("https://signups.victoria.ac.nz/")) {
+            } else {
                 internet.goBack();
             }
             return false;
@@ -148,6 +143,13 @@ public class InternetFragment extends Fragment{
                         + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
                         + name
                         + "';document.getElementById('ctl00_mainContent_simLogin_LoginImageButton').click();");
+            } else if(url.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")){
+                view.loadUrl("javascript:if(document.getElementById('NewUserName')!=null){document.getElementsByName('NewUserPassword')[0].value = '"
+                        + pass
+                        + "';document.getElementsByName('NewUserName')[0].value = '"
+                        + name
+                        + "';document.getElementsByClassName('submit')[0].click();" +
+                        "}");
             }
         }
     }

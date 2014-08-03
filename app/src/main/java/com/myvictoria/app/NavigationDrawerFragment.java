@@ -20,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -108,6 +106,8 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section8),
                         getString(R.string.title_section9),
                         getString(R.string.title_section7),
+                        getString(R.string.title_section3),
+                        getString(R.string.title_section2)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -135,7 +135,7 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        // ActionBarDrawerToggle ties together the the proper interactions
+        // ActionBarDrawerToggle ties together the the proper interactions`
         // between the navigation drawer and the action bar app icon.
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
@@ -249,7 +249,6 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

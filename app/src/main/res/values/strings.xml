@@ -4,8 +4,8 @@
     <string name="password">Password</string>
     <string name="app_name">MyVictoria</string>
     <string name="title_section1">Home</string>
-    <string name="title_section2">Calendar</string>
-    <string name="title_section3">Timetable</string>
+    <string name="title_section2">Settings</string>
+    <string name="title_section3">Study Room Booking</string>
     <string name="title_section4">Assesments</string>
     <string name="title_section5">Campus Map</string>
     <string name="title_section6">BlackBoard</string>
