@@ -23,11 +23,15 @@ public class InternetFragment extends Fragment{
     private static String ARG_URL = "https://my.vuw.ac.nz/cp/home/displaylogin";
     public WebView internet;
     private ProgressBar prog;
-    public String name, pass;
+    public String name, pass, orginUrl;
+    private boolean found;
 
     public boolean close(){
         String currentUrl = internet.getUrl();
-        if(currentUrl.equals("http://my.vuw.ac.nz/render.userLayoutRootNode.uP?uP_root=root") || currentUrl.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1") || currentUrl.equals("https://signups.victoria.ac.nz/index.aspx")){
+        if(currentUrl.equals("http://my.vuw.ac.nz/render.userLayoutRootNode.uP?uP_root=root")
+                || currentUrl.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")
+                || currentUrl.equals("https://signups.victoria.ac.nz/index.aspx")
+                || currentUrl.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")){
             return true;
         } else {
             if (internet.getUrl().contains("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root")){
@@ -150,6 +154,9 @@ public class InternetFragment extends Fragment{
                         + name
                         + "';document.getElementsByClassName('submit')[0].click();" +
                         "}");
+            } else if(!found) {
+                orginUrl = url;
+                found = true;
             }
         }
     }
