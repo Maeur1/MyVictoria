@@ -11,10 +11,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class LectureFragment extends Fragment implements View.OnClickListener{
@@ -25,6 +29,10 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
     String room, type, day, start, end;
     Boolean found;
     ArrayList<String> strings = new ArrayList<String>();
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,18 +43,20 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        listDataHeader.clear();
+        listDataChild.clear();
         if (!input.getText().toString().matches("")) {
             if (v.getId() == R.id.bSubmit) {
                 response.setText("");
                 found = false;
                 strings.clear();
                 final ProgressDialog ringProgressDialog= ProgressDialog.show(getActivity(), "Please wait...", "Searching for Lectures...", true);
-                AsyncTask<Object, Void, ArrayList<String>> task = new AsyncTask<Object, Void, ArrayList<String>>() {
+                AsyncTask<String, Void, ArrayList<String>> task = new AsyncTask<String, Void, ArrayList<String>>() {
                     @Override
-                    protected ArrayList<String> doInBackground(Object... params) {
+                    protected ArrayList<String> doInBackground(String... params) {
                         InputStream inputStream = getResources().openRawResource(R.raw.classdata);
                         Scanner scan = new Scanner(inputStream);
-                        String search = (String)params[1];
+                        String search = params[0];
                         ArrayList<String> strings2 = new ArrayList<String>();
                         while (scan.hasNext()) {
                             String check = scan.next();
@@ -56,7 +66,7 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                                 start = scan.next();
                                 end = scan.next();
                                 room = scan.next();
-                                strings2.add(check + " " + type + " is in " + room + " at " + start + " on " + day + "\n");
+                                strings2.add(check + " " + type + " is in " + room + " at " + start + " on " + day);
                                 found = true;
                             } else {
                                 scan.nextLine();
@@ -69,17 +79,27 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                     protected void onPostExecute(ArrayList<String> strings2) {
                         strings.clear();
                         strings.addAll(strings2);
-                        for (String s:strings2)
-                            response.append(s);
-                        response.setVisibility(View.VISIBLE);
+                        for(String s: strings2) {
+                            String firstword = s.substring(0, s.indexOf(" "));
+                            if(!listDataHeader.contains(firstword)){
+                                listDataHeader.add(firstword);
+                                listDataChild.put(firstword, new ArrayList<String>());
+                            }
+                            listDataChild.get(firstword).add(s.substring(firstword.length(), s.length()));
+                        }
                         if (!found) {
+                            response.setVisibility(View.VISIBLE);
                             response.setText("There were no matches found.");
+                        } else {
+                            listAdapter = new ExpandedListAdapter(getActivity().getApplicationContext(), listDataHeader, listDataChild);
+                            expListView.setAdapter(listAdapter);
+                            response.setVisibility(View.GONE);
+                            expListView.setVisibility(View.VISIBLE);
                         }
                         ringProgressDialog.dismiss();
                     }
                 };
-
-                task.execute(null, input.getText().toString());
+                task.execute(input.getText().toString());
             }
         } else {
             response.setText("Please enter a class.");
@@ -97,6 +117,10 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
         response = (TextView) view.findViewById(R.id.tvResponse);
         response.setVisibility(View.GONE);
         submit.setOnClickListener(this);
+        expListView = (ExpandableListView) view.findViewById(R.id.lvExp);
+        expListView.setVisibility(View.GONE);
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
     }
 
 

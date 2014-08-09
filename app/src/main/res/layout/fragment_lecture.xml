@@ -28,29 +28,36 @@
         android:layout_height="wrap_content"
         android:text="When is my next lecture for:"
         android:id="@+id/tvInfo"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp" />
 
-    <ScrollView
+    <TextView
+        android:gravity="center"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/scrollView"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvResponse"
+        android:layout_marginTop="33dp"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/bSubmit"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:paddingTop="10dp"
-        android:paddingBottom="40dp">
+        android:paddingBottom="40dp"/>
 
-        <TextView
+        <ExpandableListView
             android:gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvResponse"
-            android:text="hi"
-            android:layout_marginTop="33dp"/>
-        </ScrollView>
+            android:layout_height="fill_parent"
+            android:id="@+id/lvExp"
+            android:padding="10sp"
+            android:layout_marginTop="33dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/bSubmit"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="40dp"/>
 </RelativeLayout>
