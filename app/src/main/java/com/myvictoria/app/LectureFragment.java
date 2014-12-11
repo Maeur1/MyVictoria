@@ -66,7 +66,31 @@ public class LectureFragment extends Fragment implements View.OnClickListener{
                                 start = scan.next();
                                 end = scan.next();
                                 room = scan.next();
-                                strings2.add(check + " " + type + " is in " + room + " at " + start + " on " + day);
+                                String helper = day;
+                                for(int i = 0; i < day.length(); i++) {
+                                    char s = day.charAt(i);
+                                    switch (s){
+                                        case 'M':
+                                            helper = "Monday";
+                                            break;
+                                        case 'T':
+                                            helper = "Tuesday";
+                                            break;
+                                        case 'W':
+                                            helper = "Wednesday";
+                                            break;
+                                        case 'R':
+                                            helper = "Thursday";
+                                            break;
+                                        case 'F':
+                                            helper = "Friday";
+                                            break;
+                                        case 'S':
+                                            helper = "Saturday";
+                                            break;
+                                    }
+                                    strings2.add(check + " " + type + " is in " + room + " at " + start + " on " + helper);
+                                }
                                 found = true;
                             } else {
                                 scan.nextLine();
