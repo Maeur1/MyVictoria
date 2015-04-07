@@ -86,48 +86,24 @@ public class MainActivity extends Activity
         pass = prefs.getString("password", "Password here");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        switch (position) {
-            case 0:
-                mTitle = getString(R.string.title_section1);
-                ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://my.vuw.ac.nz/cp/home/displaylogin", name, pass));
-                ft.commit();
-                break;
-            case 1:
-                mTitle = getString(R.string.title_section5);
-                ft.replace(R.id.container, new MapFragment());
-                ft.commit();
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section6);
-                ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1", name, pass));
-                ft.commit();
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section8);
-                ft.replace(R.id.container, InternetFragment.newInstance("https://www.facebook.com/groups/overheardvic/"));
-                ft.commit();
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section9);
-                ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx", name, pass));
-                ft.commit();
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section7);
-                ft.replace(R.id.container, new LectureFragment());
-                ft.commit();
-                break;
-            case 6:
-                mTitle = getString(R.string.title_section3);
-                ft.replace(R.id.container, InternetFragment.newInstanceLogin("https://library.victoria.ac.nz/roombooking/edit_entry.php", name, pass));
-                ft.commit();
-                break;
-            case 7:
-                mTitle = getString(R.string.title_section2);
-                ft.replace(R.id.container, new SettingsFragment());
-                ft.commit();
-                break;
+        mTitle = getResources().getStringArray(R.array.section_titles)[position];
+        String website = getResources().getStringArray(R.array.websites)[position];
+        if(!website.isEmpty()) {
+            ft.replace(R.id.container, InternetFragment.newInstanceLogin(website, name, pass));
+        } else {
+            switch (position) {
+                case 1:
+                    ft.replace(R.id.container, new MapFragment());
+                    break;
+                case 7:
+                    ft.replace(R.id.container, new LectureFragment());
+                    break;
+                case 9:
+                    ft.replace(R.id.container, new SettingsFragment());
+                    break;
+            }
         }
+        ft.commit();
     }
 
     public void restoreActionBar() {

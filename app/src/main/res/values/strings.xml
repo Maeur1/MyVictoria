@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="section_titles">
+        <item>Home</item>
+        <item>Campus Map</item>
+        <item>BlackBoard</item>
+        <item>Overheard @ Vic</item>
+        <item>S-Cubed</item>
+        <item>Metlink</item>
+        <item>StudyLink</item>
+        <item>When is My Lecture?</item>
+        <item>Study Room Booking</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="websites">
+        <item>https://my.vuw.ac.nz/cp/home/displaylogin</item>
+        <item></item>
+        <item>https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1</item>
+        <item>https://www.facebook.com/groups/overheardvic/</item>
+        <item>https://signups.victoria.ac.nz/login.aspx?ReturnUrl=%2findex.aspx</item>
+        <item>http://m.metlink.org.nz</item>
+        <item>http://www.studylink.govt.nz</item>
+        <item></item>
+        <item>https://library.victoria.ac.nz/roombooking/edit_entry.php</item>
+        <item></item>
+    </string-array>
     <string name="username">UserName</string>
     <string name="password">Password</string>
-    <string name="app_name">MyVictoria</string>
-    <string name="title_section1">Home</string>
-    <string name="title_section2">Settings</string>
-    <string name="title_section3">Study Room Booking</string>
-    <string name="title_section4">Assesments</string>
-    <string name="title_section5">Campus Map</string>
-    <string name="title_section6">BlackBoard</string>
-    <string name="title_section7">When is My lecture?</string>
-    <string name="title_section8">Overheard @ Vic</string>
-    <string name="title_section9">S-Cubed</string>
+    <string name="app_name">Mayur Victoria</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
 
 </resources>

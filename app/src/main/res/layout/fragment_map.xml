@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:text="Kelburn"
         android:id="@+id/bKelburn"
-        android:layout_below="@+id/pbImage"
         android:layout_centerHorizontal="true" />
 
     <Button
