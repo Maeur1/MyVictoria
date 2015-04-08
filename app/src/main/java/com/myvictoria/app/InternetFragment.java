@@ -3,9 +3,11 @@ package com.myvictoria.app;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +25,9 @@ public class InternetFragment extends Fragment{
     private static String ARG_URL = "https://my.vuw.ac.nz/cp/home/displaylogin";
     public WebView internet;
     private ProgressBar prog;
-    public String name, pass, orginUrl;
+    public String orginUrl;
     private boolean found;
+    private SharedPreferences pref;
 
     public boolean close(){
         String currentUrl = internet.getUrl();
@@ -43,30 +46,18 @@ public class InternetFragment extends Fragment{
         }
     }
 
-    public static InternetFragment newInstance(String url) {
-        InternetFragment fragment = new InternetFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static InternetFragment newInstanceLogin(String url, String na, String pa) {
-        InternetFragment fragment = new InternetFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        args.putString("pass", pa);
-        args.putString("user", na);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void setArguments(Bundle args) {
+        ARG_URL = args.getString("URL");
         super.setArguments(args);
-        ARG_URL = args.getString(ARG_URL);
-        name = args.getString("user");
-        pass = args.getString("pass");
+    }
+
+    public static InternetFragment newInstance(String url) {
+        InternetFragment fragment = new InternetFragment();
+        Bundle b = new Bundle();
+        b.putString("URL", url);
+        fragment.setArguments(b);
+        return fragment;
     }
 
     @Override
@@ -109,8 +100,18 @@ public class InternetFragment extends Fragment{
     private class MyBrowser extends WebViewClient {
 
         @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String s = pref.getString("username", "");
+            if(!s.equals("")) {
+                view.loadUrl("https://wireless.victoria.ac.nz/fs/customwebauth/login.html");
+            }
+            super.onReceivedError(view, errorCode, description, failingUrl);
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.endsWith(".pdf")) {
+            if(url.endsWith(".pdf") || url.endsWith(".pptx")) {
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                 request.allowScanningByMediaScanner();
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
@@ -122,6 +123,7 @@ public class InternetFragment extends Fragment{
             } else {
                 view.loadUrl(url);
             }
+            super.shouldOverrideUrlLoading(view, url);
             return true;
         }
 
@@ -129,31 +131,39 @@ public class InternetFragment extends Fragment{
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             cookie = android.webkit.CookieManager.getInstance().getCookie(url);
+            pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
                 view.loadUrl("javascript:document.getElementById('pass').value = '"
-                        + pass
+                        + pref.getString("password", "Password here")
                         + "';document.getElementById('user').value= '"
-                        + name
+                        + pref.getString("username", "Username here")
                         + "';login();");
             } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")){
                 view.loadUrl("javascript:document.getElementById('password').value = '"
-                        + pass
+                        + pref.getString("password", "Password here")
                         + "';document.getElementById('user_id').value = '"
-                        + name
+                        + pref.getString("username", "Username here")
                         + "';document.getElementsByClassName('submit button-1')[0].click();");
             } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
                 view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
-                        + pass
+                        + pref.getString("password", "Password here")
                         + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
-                        + name
+                        + pref.getString("username", "Username here")
                         + "';document.getElementById('ctl00_mainContent_simLogin_LoginImageButton').click();");
             } else if(url.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")){
                 view.loadUrl("javascript:if(document.getElementById('NewUserName')!=null){document.getElementsByName('NewUserPassword')[0].value = '"
-                        + pass
+                        + pref.getString("password", "Password here")
                         + "';document.getElementsByName('NewUserName')[0].value = '"
-                        + name
+                        + pref.getString("username", "Username here")
                         + "';document.getElementsByClassName('submit')[0].click();" +
                         "}");
+            } else if(url.contains("wireless")){
+                Log.d("WIRELESS ADDRESS", view.getUrl());
+                view.loadUrl("javascript:document.getElementById('password').value = '"
+                        + pref.getString("password", "Password here")
+                        + "';document.getElementById('username').value = '"
+                        + pref.getString("username", "Username here")
+                        + "';document.getElementsByClassName('button')[0].click();");
             } else if(!found) {
                 orginUrl = url;
                 found = true;

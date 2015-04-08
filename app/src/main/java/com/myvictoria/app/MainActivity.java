@@ -5,15 +5,17 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 
 public class MainActivity extends Activity
@@ -33,7 +35,6 @@ public class MainActivity extends Activity
     SharedPreferences getData;
     static String name;
     static String pass;
-    ShowcaseView sv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,21 +50,6 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        boolean isFirstRun = getData.getBoolean("FIRSTRUN", true);
-        if (isFirstRun) {
-            ActionViewTarget av = new ActionViewTarget(this, ActionViewTarget.Type.TITLE);
-            sv = new ShowcaseView.Builder(this)
-                    .setContentText("Tap this to get to the menu of modules")
-                    .setContentTitle("MyVictoria Home")
-                    .hideOnTouchOutside()
-                    .setTarget(av)
-                    .setStyle(R.style.CustomShowcaseTheme)
-                    .build();
-            sv.setButtonText("OK Got it!");
-            getData.edit()
-                    .putBoolean("FIRSTRUN", false)
-                    .apply();
-        }
     }
 
     @Override
@@ -81,15 +67,16 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         fragmentManager = getFragmentManager();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        name = prefs.getString("username", "Username here");
-        pass = prefs.getString("password", "Password here");
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         mTitle = getResources().getStringArray(R.array.section_titles)[position];
         String website = getResources().getStringArray(R.array.websites)[position];
-        if(!website.isEmpty()) {
-            ft.replace(R.id.container, InternetFragment.newInstanceLogin(website, name, pass));
+        WifiManager wifiManager = (WifiManager) getSystemService (Context.WIFI_SERVICE);
+        WifiInfo info = wifiManager.getConnectionInfo();
+        if(!hasInternet() && info.getSSID().contains("victoria")){
+            ft.replace(R.id.container, InternetFragment.newInstance("https://wireless.victoria.ac.nz/fs/customwebauth/login.html"));
+        } else if(!website.isEmpty()) {
+            ft.replace(R.id.container, InternetFragment.newInstance(website));
         } else {
             switch (position) {
                 case 1:
@@ -104,6 +91,25 @@ public class MainActivity extends Activity
             }
         }
         ft.commit();
+    }
+
+    private boolean hasInternet() {
+        boolean haveConnectedWifi = false;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI")) {
+                haveConnectedWifi = false;
+                NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+                if (ni.isConnected() && activeNetworkInfo != null) {
+                    haveConnectedWifi = true;
+                }
+            }
+            if(ni.getTypeName().equalsIgnoreCase("MOBILE")){
+                haveConnectedWifi = true;
+            }
+        }
+        return haveConnectedWifi;
     }
 
     public void restoreActionBar() {
