@@ -97,6 +97,7 @@ public class MainActivity extends Activity
         boolean haveConnectedWifi = false;
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        cm.setNetworkPreference(ConnectivityManager.TYPE_WIFI);
         for (NetworkInfo ni : netInfo) {
             if (ni.getTypeName().equalsIgnoreCase("WIFI")) {
                 haveConnectedWifi = false;
