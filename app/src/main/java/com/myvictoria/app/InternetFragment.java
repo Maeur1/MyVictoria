@@ -1,5 +1,6 @@
 package com.myvictoria.app;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
@@ -28,21 +29,26 @@ public class InternetFragment extends Fragment{
     public String orginUrl;
     private boolean found;
     private SharedPreferences pref;
+    private int backCounter;
+    private boolean isSafe = true;
+
+    @Override
+    public void onStop() {
+        if(!isSafe){
+            internet.stopLoading();
+        }
+        super.onStop();
+    }
 
     public boolean close(){
-        String currentUrl = internet.getUrl();
-        if(currentUrl.equals("http://my.vuw.ac.nz/render.userLayoutRootNode.uP?uP_root=root")
-                || currentUrl.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")
-                || currentUrl.equals("https://signups.victoria.ac.nz/index.aspx")
-                || currentUrl.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")){
+        if(internet.getUrl().contains("wireless")){
             return true;
-        } else {
-            if (internet.getUrl().contains("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root")){
-                internet.loadUrl("http://my.vuw.ac.nz/tag.87d85b278372bb7c.render.userLayoutRootNode.uP?uP_root=root&uP_sparam=activeTab&activeTab=u11l1s8&uP_tparam=frm&frm=");
-            } else {
-                internet.goBack();
-            }
+        } else if(backCounter > 0) {
+            backCounter -= 3;
+            internet.goBack();
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -82,10 +88,13 @@ public class InternetFragment extends Fragment{
     private class MyChrome extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
+            isSafe = false;
             prog.setVisibility(View.VISIBLE);
             prog.setProgress(newProgress);
             if (newProgress == 100) {
                 prog.setProgress(0);
+                prog.setVisibility(View.INVISIBLE);
+                isSafe = true;
             }
             super.onProgressChanged(view, newProgress);
         }
@@ -121,52 +130,55 @@ public class InternetFragment extends Fragment{
                 request.addRequestHeader("User-Agent", view.getSettings().getUserAgentString());
                 manager.enqueue(request);
             } else {
+                backCounter++;
                 view.loadUrl(url);
             }
-            super.shouldOverrideUrlLoading(view, url);
-            return true;
+            return super.shouldOverrideUrlLoading(view, url);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             cookie = android.webkit.CookieManager.getInstance().getCookie(url);
-            pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            if(url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
-                view.loadUrl("javascript:document.getElementById('pass').value = '"
-                        + pref.getString("password", "Password here")
-                        + "';document.getElementById('user').value= '"
-                        + pref.getString("username", "Username here")
-                        + "';login();");
-            } else if(url.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")){
-                view.loadUrl("javascript:document.getElementById('password').value = '"
-                        + pref.getString("password", "Password here")
-                        + "';document.getElementById('user_id').value = '"
-                        + pref.getString("username", "Username here")
-                        + "';document.getElementsByClassName('submit button-1')[0].click();");
-            } else if(url.contains("https://signups.victoria.ac.nz/login.aspx")){
-                view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
-                        + pref.getString("password", "Password here")
-                        + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
-                        + pref.getString("username", "Username here")
-                        + "';document.getElementById('ctl00_mainContent_simLogin_LoginImageButton').click();");
-            } else if(url.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")){
-                view.loadUrl("javascript:if(document.getElementById('NewUserName')!=null){document.getElementsByName('NewUserPassword')[0].value = '"
-                        + pref.getString("password", "Password here")
-                        + "';document.getElementsByName('NewUserName')[0].value = '"
-                        + pref.getString("username", "Username here")
-                        + "';document.getElementsByClassName('submit')[0].click();" +
-                        "}");
-            } else if(url.contains("wireless")){
-                Log.d("WIRELESS ADDRESS", view.getUrl());
-                view.loadUrl("javascript:document.getElementById('password').value = '"
-                        + pref.getString("password", "Password here")
-                        + "';document.getElementById('username').value = '"
-                        + pref.getString("username", "Username here")
-                        + "';document.getElementsByClassName('button')[0].click();");
-            } else if(!found) {
-                orginUrl = url;
-                found = true;
+            Activity ac = getActivity();
+            if(ac != null) {
+                pref = PreferenceManager.getDefaultSharedPreferences(ac);
+                if (url.equals("https://my.vuw.ac.nz/cp/home/displaylogin")) {
+                    view.loadUrl("javascript:document.getElementById('pass').value = '"
+                            + pref.getString("password", "Password here")
+                            + "';document.getElementById('user').value= '"
+                            + pref.getString("username", "Username here")
+                            + "';login();");
+                } else if (url.equals("https://blackboard.vuw.ac.nz/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_1_1")) {
+                    view.loadUrl("javascript:document.getElementById('password').value = '"
+                            + pref.getString("password", "Password here")
+                            + "';document.getElementById('user_id').value = '"
+                            + pref.getString("username", "Username here")
+                            + "';document.getElementsByClassName('submit button-1')[0].click();");
+                } else if (url.contains("https://signups.victoria.ac.nz/login.aspx")) {
+                    view.loadUrl("javascript:document.getElementById('ctl00_mainContent_simLogin_Password').value = '"
+                            + pref.getString("password", "Password here")
+                            + "';document.getElementById('ctl00_mainContent_simLogin_UserName').value = '"
+                            + pref.getString("username", "Username here")
+                            + "';document.getElementById('ctl00_mainContent_simLogin_LoginImageButton').click();");
+                } else if (url.equals("https://library.victoria.ac.nz/roombooking/edit_entry.php")) {
+                    view.loadUrl("javascript:if(document.getElementById('NewUserName')!=null){document.getElementsByName('NewUserPassword')[0].value = '"
+                            + pref.getString("password", "Password here")
+                            + "';document.getElementsByName('NewUserName')[0].value = '"
+                            + pref.getString("username", "Username here")
+                            + "';document.getElementsByClassName('submit')[0].click();" +
+                            "}");
+                } else if (url.contains("wireless")) {
+                    Log.d("WIRELESS ADDRESS", view.getUrl());
+                    view.loadUrl("javascript:document.getElementById('password').value = '"
+                            + pref.getString("password", "Password here")
+                            + "';document.getElementById('username').value = '"
+                            + pref.getString("username", "Username here")
+                            + "';document.getElementsByClassName('button')[0].click();");
+                } else if (!found) {
+                    orginUrl = url;
+                    found = true;
+                }
             }
         }
     }

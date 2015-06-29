@@ -74,9 +74,9 @@ public class MainActivity extends Activity
         WifiManager wifiManager = (WifiManager) getSystemService (Context.WIFI_SERVICE);
         WifiInfo info = wifiManager.getConnectionInfo();
         if(!hasInternet() && info.getSSID().contains("victoria")){
-            ft.replace(R.id.container, InternetFragment.newInstance("https://wireless.victoria.ac.nz/fs/customwebauth/login.html"));
+            ft.replace(R.id.container, InternetFragment.newInstance("https://wireless.victoria.ac.nz/fs/customwebauth/login.html"), "MAIN_FRAGMENT");
         } else if(!website.isEmpty()) {
-            ft.replace(R.id.container, InternetFragment.newInstance(website));
+            ft.replace(R.id.container, InternetFragment.newInstance(website), "MAIN_FRAGMENT");
         } else {
             switch (position) {
                 case 1:

@@ -12,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="matrix"
-        android:src="@drawable/kelburn_map" />
+        android:src="@drawable/kelburn_map"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
